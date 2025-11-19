@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Análisis Radiológico Automatizado - Proyecto de Investigación</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🏥 Sistema de Análisis Radiológico Automatizado</h1>
+            <p class="subtitle">Proyecto de Investigación en Inteligencia Artificial Médica</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Sección de descripción del proyecto -->
+        <section class="project-description">
+            <h2>📋 Descripción del Proyecto</h2>
+            <p>
+                Este sistema experimental utiliza modelos de inteligencia artificial avanzados (Gemini API) 
+                para el análisis automatizado de imágenes radiológicas. El objetivo de esta investigación 
+                es evaluar la capacidad de la IA para identificar hallazgos radiológicos y proporcionar 
+                diagnósticos preliminares que puedan asistir al personal médico en la toma de decisiones.
+            </p>
+            <div class="disclaimer">
+                <strong>⚠️ Aviso Importante:</strong> Este sistema es un prototipo de investigación académica. 
+                Los resultados NO deben utilizarse para diagnósticos médicos reales sin la supervisión de 
+                profesionales certificados en radiología.
+            </div>
+        </section>
+
+        <!-- Sección de carga de imagen -->
+        <section class="upload-section">
+            <h2>📤 Cargar Radiografía</h2>
+            <form id="formulario">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <p class="upload-text">Haz clic para seleccionar una radiografía</p>
+                    <p class="upload-hint">Formatos soportados: JPG, PNG, WEBP (mín. 600x600px, máx. 20MB)</p>
+                    <input type="file" accept="image/*" id="imagen" required>
+                </div>
+                
+                <!-- Previsualización de imagen -->
+                <div class="preview-container" id="previewContainer" style="display: none;">
+                    <h3>Vista previa de la imagen:</h3>
+                    <img id="imagePreview" src="" alt="Vista previa">
+                    <button type="button" class="btn-remove" id="btnRemove">✕ Cambiar imagen</button>
+                </div>
+
+                <button type="submit" class="btn-analyze" id="btnAnalyze">
+                    🔍 Analizar Radiografía
+                </button>
+            </form>
+        </section>
+
+        <!-- Sección de resultados -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <h2>📊 Resultados del Análisis</h2>
+            <div id="resultado" class="result-content"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 - Proyecto de Investigación en IA Médica | Desarrollado con fines académicos</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
