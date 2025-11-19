@@ -1,4 +1,4 @@
-const API_KEY = 'AIzaSyCe3Q8_QuLykEcLDNIwGsayFCgxq4k3MT4';
+const API_KEY = 'api key ';
 
 const fileInput = document.getElementById('imagen');
 const imagePreview = document.getElementById('imagePreview');
@@ -11,19 +11,19 @@ const btnAnalyze = document.getElementById('btnAnalyze');
 // Función para scroll suave automático
 function scrollToResults() {
     setTimeout(() => {
-        resultsSection.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
+        resultsSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
         });
     }, 300);
 }
 
 // Previsualización de imagen
-fileInput.addEventListener('change', function(e) {
+fileInput.addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             imagePreview.src = e.target.result;
             previewContainer.style.display = 'block';
             uploadArea.style.display = 'none';
@@ -33,7 +33,7 @@ fileInput.addEventListener('change', function(e) {
 });
 
 // Botón para cambiar imagen
-btnRemove.addEventListener('click', function() {
+btnRemove.addEventListener('click', function () {
     fileInput.value = '';
     previewContainer.style.display = 'none';
     uploadArea.style.display = 'block';
@@ -41,7 +41,7 @@ btnRemove.addEventListener('click', function() {
 });
 
 // Envío del formulario
-document.getElementById('formulario').addEventListener('submit', async function(event) {
+document.getElementById('formulario').addEventListener('submit', async function (event) {
     event.preventDefault();
     const file = fileInput.files[0];
     if (!file) return;
@@ -51,15 +51,15 @@ document.getElementById('formulario').addEventListener('submit', async function(
 
     resultsSection.style.display = 'block';
     document.getElementById('resultado').innerHTML = '<p style="color: #C8DDE7; text-align: center;">⏳ Procesando imagen con IA médica avanzada...</p>';
-    
+
     scrollToResults();
 
     const reader = new FileReader();
-    reader.onload = async function(e) {
+    reader.onload = async function (e) {
         const img = new Image();
-        img.onload = async function() {
+        img.onload = async function () {
             if (img.width < 600 || img.height < 600) {
-                document.getElementById('resultado').innerHTML = 
+                document.getElementById('resultado').innerHTML =
                     '<div style="text-align: center; padding: 2rem;">' +
                     '<div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>' +
                     '<h3 style="color: #C8DDE7;">Imagen demasiado pequeña</h3>' +
@@ -71,15 +71,15 @@ document.getElementById('formulario').addEventListener('submit', async function(
                 btnAnalyze.textContent = '🔍 Analizar Radiografía';
                 return;
             }
-            
+
             document.getElementById('resultado').innerHTML = '<p style="color: #C8DDE7; text-align: center;">⏳ Identificando estructuras óseas y posibles fracturas...</p>';
-            
+
             let canvas = document.createElement('canvas');
             let ctx = canvas.getContext('2d');
             let maxDim = 2048; // Aumentado para mejor calidad
             let width = img.width;
             let height = img.height;
-            
+
             if (width > maxDim || height > maxDim) {
                 if (width > height) {
                     height = (height / width) * maxDim;
@@ -89,14 +89,14 @@ document.getElementById('formulario').addEventListener('submit', async function(
                     height = maxDim;
                 }
             }
-            
+
             canvas.width = width;
             canvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
-            
+
             const optimizedImage = canvas.toDataURL('image/jpeg', 0.97); // Mayor calidad
             const base64Image = optimizedImage.split(',')[1];
-            
+
             await analizarImagen(base64Image, 'image/jpeg');
         };
         img.src = e.target.result;
@@ -146,7 +146,7 @@ INSTRUCCIONES CRÍTICAS:
     try {
         console.log('🔍 Iniciando análisis con Gemini 2.0 Flash (modelo médico optimizado)...');
         console.log('📊 Tamaño de imagen:', (base64Image.length / 1024).toFixed(2), 'KB');
-        
+
         const response = await fetch(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent',
             {
@@ -185,16 +185,16 @@ INSTRUCCIONES CRÍTICAS:
                 })
             }
         );
-        
+
         console.log('📡 Status HTTP:', response.status);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
+
         const responseText = await response.text();
         console.log('📄 Respuesta recibida (primeros 200 caracteres):', responseText.substring(0, 200));
-        
+
         let result;
         try {
             result = JSON.parse(responseText);
@@ -202,16 +202,16 @@ INSTRUCCIONES CRÍTICAS:
             console.error('❌ Error parseando JSON:', e);
             throw new Error('Respuesta inválida del servidor');
         }
-        
+
         console.log('✅ JSON parseado correctamente');
-        
+
         if (result.error) {
             console.error('❌ Error de API:', result.error);
-            
+
             let errorMsg = result.error.message;
             let errorCode = result.error.code || 'N/A';
             let suggestion = '';
-            
+
             if (errorMsg.includes('API key') || errorMsg.includes('API_KEY_INVALID')) {
                 suggestion = '<div style="background: rgba(168, 211, 227, 0.1); padding: 1rem; margin-top: 1rem; border-radius: 4px;"><strong>Solución:</strong><ol style="margin-top: 0.5rem; line-height: 1.8;"><li>Ve a <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #C8DDE7;">Google AI Studio</a></li><li>Crea o copia tu API key</li><li>Reemplaza la clave en el código</li></ol></div>';
             } else if (errorMsg.includes('quota') || errorMsg.includes('RESOURCE_EXHAUSTED')) {
@@ -219,8 +219,8 @@ INSTRUCCIONES CRÍTICAS:
             } else if (errorMsg.includes('SAFETY') || errorMsg.includes('blocked')) {
                 suggestion = '<div style="background: rgba(168, 211, 227, 0.1); padding: 1rem; margin-top: 1rem; border-radius: 4px;"><strong>Solución:</strong> La imagen fue bloqueada por filtros de seguridad. Intenta con otra radiografía.</div>';
             }
-            
-            document.getElementById('resultado').innerHTML = 
+
+            document.getElementById('resultado').innerHTML =
                 `<div style="background: rgba(200, 221, 231, 0.1); padding: 1.5rem; border-left: 4px solid #C8DDE7; border-radius: 4px;">
                     <h3 style="color: #C8DDE7; margin-top: 0;">❌ Error de API</h3>
                     <p style="color: #F2F3F4;"><strong>Código:</strong> ${errorCode}</p>
@@ -229,10 +229,10 @@ INSTRUCCIONES CRÍTICAS:
                 </div>`;
             return;
         }
-        
+
         if (!result.candidates || result.candidates.length === 0) {
             console.warn('⚠️ No se generaron candidatos de respuesta');
-            document.getElementById('resultado').innerHTML = 
+            document.getElementById('resultado').innerHTML =
                 `<div style="background: rgba(168, 211, 227, 0.1); padding: 1.5rem; border-left: 4px solid #A8D3E3; border-radius: 4px;">
                     <h3 style="color: #C8DDE7;">⚠️ Sin respuesta del modelo</h3>
                     <p style="color: #F2F3F4;">El modelo no generó contenido. Posibles causas:</p>
@@ -245,25 +245,25 @@ INSTRUCCIONES CRÍTICAS:
                 </div>`;
             return;
         }
-        
+
         const candidate = result.candidates[0];
-        
+
         if (!candidate.content || !candidate.content.parts || candidate.content.parts.length === 0) {
             console.warn('⚠️ Candidato sin contenido válido');
-            document.getElementById('resultado').innerHTML = 
+            document.getElementById('resultado').innerHTML =
                 '<div style="text-align: center; padding: 2rem;"><p style="color: #C8DDE7;">⚠️ La respuesta está vacía. Intenta con otra radiografía.</p></div>';
             return;
         }
-        
+
         let respuesta = candidate.content.parts[0].text;
         console.log('📝 Análisis completado:', respuesta.substring(0, 150));
-        
+
         respuesta = formatearRespuesta(respuesta);
         document.getElementById('resultado').innerHTML = respuesta;
-        
+
     } catch (err) {
         console.error('💥 Error completo:', err);
-        document.getElementById('resultado').innerHTML = 
+        document.getElementById('resultado').innerHTML =
             `<div style="background: rgba(200, 221, 231, 0.1); padding: 1.5rem; border-left: 4px solid #C8DDE7; border-radius: 4px;">
                 <h3 style="color: #C8DDE7; margin-top: 0;">💥 Error de Conexión</h3>
                 <p style="color: #F2F3F4;"><strong>Tipo:</strong> ${err.name}</p>
@@ -303,11 +303,11 @@ function formatearRespuesta(texto) {
             </div>
         </div>`;
     }
-    
+
     const matchConfianza = texto.match(/(\d+)%/);
     let colorConfianza = '#C8DDE7';
     let nivelTexto = '';
-    
+
     if (matchConfianza) {
         const nivel = parseInt(matchConfianza[1]);
         if (nivel >= 90) {
@@ -324,16 +324,16 @@ function formatearRespuesta(texto) {
             nivelTexto = ' (Baja - Requiere confirmación)';
         }
     }
-    
+
     texto = texto.replace(/\*\*IDENTIFICACIÓN ANATÓMICA:\*\*/gi, '<h3 style="color: #A8D3E3; margin-top: 0; padding-bottom: 0.5rem; border-bottom: 2px solid #A8D3E3;">🔍 IDENTIFICACIÓN ANATÓMICA</h3>');
     texto = texto.replace(/\*\*DIAGNÓSTICO:\*\*/gi, '<h3 style="color: #C8DDE7; margin-top: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #C8DDE7;">📋 DIAGNÓSTICO</h3>');
     texto = texto.replace(/\*\*NIVEL DE CONFIANZA:\*\*/gi, `<h3 style="color: ${colorConfianza}; margin-top: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid ${colorConfianza};">🎯 NIVEL DE CONFIANZA${nivelTexto}</h3>`);
     texto = texto.replace(/\*\*OBSERVACIONES:\*\*/gi, '<h3 style="color: #A8D3E3; margin-top: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #A8D3E3;">💡 OBSERVACIONES</h3>');
     texto = texto.replace(/⚠️ ADVERTENCIA:/gi, '<div style="background: rgba(168, 211, 227, 0.15); padding: 1.2rem; border-left: 4px solid #C8DDE7; margin-top: 1.5rem; border-radius: 4px;"><strong style="color: #C8DDE7; font-size: 1.05em;">⚠️ ADVERTENCIA MÉDICA:</strong>');
-    
+
     if (texto.includes('<strong style="color: #C8DDE7; font-size: 1.05em;">⚠️ ADVERTENCIA MÉDICA:</strong>')) {
         texto = texto.replace(/(\n\n|$)/, '</div>$1');
     }
-    
+
     return `<div style="text-align: left; line-height: 1.9; color: #F2F3F4; font-size: 1.02em;">${texto}</div>`;
 }
